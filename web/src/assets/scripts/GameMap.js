@@ -1,4 +1,5 @@
 import { AcGameObject } from "./AcGameObject";
+import { Snake } from "./Snake";
 import { Wall  } from "./Wall"; 
 
 export class GameMap extends AcGameObject {
@@ -10,10 +11,15 @@ export class GameMap extends AcGameObject {
         this.L = 0;
 
         this.rows = 13;
-        this.cols = 13;
+        this.cols = 14;
 
         this.inner_walls_count = 20;
         this.walls = [];
+        
+        this.snakes = [
+            new Snake({id: 0, color:"#4876EC", r:this.rows - 2, c: 1}, this),
+            new Snake({id: 1, color:"#F94848", r: 1, c: this.cols - 2}, this),
+        ]
     }
 
     check_connectivity(g, sx, sy, tx, ty) {
@@ -50,12 +56,12 @@ export class GameMap extends AcGameObject {
             for (let j = 0; j < 1000; j ++) {
                 let r = parseInt(Math.random() * this.rows);
                 let c = parseInt(Math.random() * this.cols);
-                if(g[r][c] || g[c][r]) continue;
+                if(g[r][c] || g[this.rows - 1 - r][this.cols - 1 - c]) continue;
 
                 if(r == this.rows - 2 && c == 1 || c == this.cols - 2 && r == 1)
                 continue; 
 
-                g[r][c] = g[c][r] = true;
+                g[r][c] = g[this.rows - 1 - r][this.cols - 1 - c] = true;
                 break;
             }
         }
